@@ -8,6 +8,14 @@ object Main extends IOApp {
   def run(args: List[String]): IO[ExitCode] = program.as(ExitCode.Success)
 
   private def program: IO[Unit] = {
+    val database = new TextSearchDatabase(Nil) // stub
+
+    def handleInput(input: String): IO[Unit] = input.toLowerCase match {
+      case "2" => IO(println(searchableFieldsOutput(database.userSearchFields)))
+      case "quit" => IO(sys.exit())
+      case _ => IO(println(s"You have entered: ${input}\n"))
+    }
+
     def innerLoop: IO[Unit] = for {
       _ <- IO(println(searchOptionsMessage))
       input <- IO(readLine())
@@ -21,11 +29,6 @@ object Main extends IOApp {
     } yield ()
   }
 
-  private def handleInput(input: String): IO[Unit] = input.toLowerCase match {
-    case "quit" => IO(sys.exit())
-    case _ => IO(println(s"You have entered: ${input}\n"))
-  }
-
   private val welcomeMessage =
     """Welcome to Zendesk Search
       |Type 'quit' to exit at any time, press 'Enter' to continue.
@@ -36,5 +39,11 @@ object Main extends IOApp {
       |* Press 1 to search Zendesk
       |* Press 2 to view a list of searchable fields
       |* Type 'quit' to exit
+      |""".stripMargin
+
+  private def searchableFieldsOutput(userSearchFields: List[String]): String =
+    s"""Search Users with:
+      |
+      |${userSearchFields.mkString("\n")}
       |""".stripMargin
 }
