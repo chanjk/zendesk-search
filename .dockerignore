@@ -1,0 +1,8 @@
+.bsp
+.git
+.gitignore
+.idea
+.metals
+.vscode
+Dockerfile
+docker-compose.yml

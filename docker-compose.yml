@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  app:
+    build: .
+    working_dir: /app
+    volumes:
+      - .:/app
+      - coursier-cache:/root/.cache/coursier
+      - ivy-cache:/root/.ivy2/cache
+      - sbt-cache:/root/.sbt
+    command: sbt run
+
+volumes:
+  coursier-cache:
+  ivy-cache:
+  sbt-cache:
