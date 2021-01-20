@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+cd $(dirname $0)/..
+
+trap 'docker-compose down --remove-orphans' 0
+
+docker-compose run --rm app sbt test

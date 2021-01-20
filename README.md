@@ -59,4 +59,14 @@ WIP
 
 ## Running the tests
 
-WIP
+### With Docker
+
+```sh
+$ auto/test-docker
+```
+
+### Without Docker
+
+```sh
+$ auto/test
+```

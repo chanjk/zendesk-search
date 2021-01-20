@@ -3,8 +3,18 @@ name := "Zendesk Search"
 scalaVersion := "2.13.4"
 
 val catsEffectVersion = "2.3.1"
+val circeVersion = "0.13.0"
+val scalaTestVersion = "3.2.3"
 
-libraryDependencies += "org.typelevel" %% "cats-effect" % catsEffectVersion
+libraryDependencies ++= Seq(
+  "io.circe" %% "circe-core" % circeVersion,
+  "io.circe" %% "circe-generic" % circeVersion,
+  "io.circe" %% "circe-generic-extras" % circeVersion,
+  "io.circe" %% "circe-literal" % circeVersion,
+  "io.circe" %% "circe-parser" % circeVersion,
+  "org.scalatest" %% "scalatest" % scalaTestVersion % "test",
+  "org.typelevel" %% "cats-effect" % catsEffectVersion
+)
 
 scalacOptions ++= Seq(
   "-deprecation", // Emit warning and location for usages of deprecated APIs.

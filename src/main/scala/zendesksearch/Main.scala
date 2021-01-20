@@ -5,15 +5,16 @@ import cats.effect._
 import scala.io.StdIn.readLine
 
 object Main extends IOApp {
-  def run(args: List[String]): IO[ExitCode] = program.as(ExitCode.Success)
+  def run(args: List[String]): IO[ExitCode] = for {
+    userDatabase <- UserDatabase.fromFile("src/main/resources/users.json")
+    _ <- program(userDatabase)
+  } yield ExitCode.Success
 
-  private def program: IO[Unit] = {
-    val database = new TextSearchDatabase(Nil) // stub
-
+  private def program(userDatabase: UserDatabase): IO[Unit] = {
     def handleInput(input: String): IO[Unit] = input.toLowerCase match {
-      case "2" => IO(println(searchableFieldsOutput(database.userSearchFields)))
+      case "2" => IO(println(searchableFieldsOutput(userDatabase.searchFields)))
       case "quit" => IO(sys.exit())
-      case _ => IO(println(s"You have entered: ${input}\n"))
+      case _ => IO(println(userDatabase.search("_id", "1")))
     }
 
     def innerLoop: IO[Unit] = for {
