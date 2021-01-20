@@ -1,12 +1,6 @@
 package zendesksearch
 
-import cats.effect._
-import io.circe.jawn.decodeFile
-import cats.syntax.all._
-
-import java.io.File
-
-class UserDatabase(users: List[User]) {
+case class UserDatabase(users: List[User]) {
   private val index: Map[String, Map[String, List[User]]] = Map(
     "_id" -> users.groupBy(_._id.toString),
     "url" -> users.groupBy(_.url),
@@ -36,14 +30,4 @@ class UserDatabase(users: List[User]) {
     } yield users).toList.flatten
 
   def searchFields: List[String] = index.keys.toList.sorted
-}
-
-object UserDatabase {
-  def fromFile(filepath: String): IO[UserDatabase] =
-    IO.suspend {
-      val errorOrUsers = decodeFile[List[User]](new File(filepath))
-        .leftMap(error => FileDecodeError(filepath, error.show))
-
-      IO.fromEither(errorOrUsers.map(new UserDatabase(_)))
-    }
 }

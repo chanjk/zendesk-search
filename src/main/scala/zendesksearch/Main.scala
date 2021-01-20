@@ -6,8 +6,8 @@ import scala.io.StdIn.readLine
 
 object Main extends IOApp {
   def run(args: List[String]): IO[ExitCode] = for {
-    userDatabase <- UserDatabase.fromFile("src/main/resources/users.json")
-    _ <- program(userDatabase)
+    users <- JsonFileReader.readAs[List[User]]("src/main/resources/users.json")
+    _ <- program(UserDatabase(users))
   } yield ExitCode.Success
 
   private def program(userDatabase: UserDatabase): IO[Unit] = {

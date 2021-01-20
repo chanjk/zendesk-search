@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "name": "Saturn",
+    "active": true
+  },
+  {
+    "id": 2,
+    "name": "Jupiter",
+    "active": false
+  }
+]
