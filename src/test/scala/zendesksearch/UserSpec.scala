@@ -6,9 +6,9 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 
 class UserSpec extends AnyFreeSpec with Matchers with TypeCheckedTripleEquals {
-  "decoding a JSON object representing a User" - {
+  "decoding a JSON object representing a user" - {
     "when the object has all required fields" - {
-      "should produce a User" in {
+      "should produce a user" in {
         val json = json"""
           {
             "_id": 1,
@@ -65,7 +65,7 @@ class UserSpec extends AnyFreeSpec with Matchers with TypeCheckedTripleEquals {
     }
 
     "when the object is missing optional fields" - {
-      "should produce a User" in {
+      "should produce a user" in {
         val json = json"""
           {
             "_id": 1,

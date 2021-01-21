@@ -6,9 +6,9 @@ import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 
 class OrganizationSpec extends AnyFreeSpec with Matchers with TypeCheckedTripleEquals {
-  "decoding a JSON object representing a Organization" - {
+  "decoding a JSON object representing an organization" - {
     "when the object has all required fields" - {
-      "should produce a Organization" in {
+      "should produce an organization" in {
         val json = json"""
           {
             "_id": 101,

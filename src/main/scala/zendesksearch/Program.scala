@@ -2,7 +2,7 @@ package zendesksearch
 
 import cats.effect._
 
-case class Program(programStage: ProgramStage, userDatabase: UserDatabase) {
+case class Program(programStage: ProgramStage, enrichedUserDatabase: EnrichedUserDatabase) {
   def tick: IO[String => IO[Program]] = run.as(handleInput)
 
   private def toStage(programStage: ProgramStage): Program = copy(programStage = programStage)
@@ -30,7 +30,7 @@ case class Program(programStage: ProgramStage, userDatabase: UserDatabase) {
 
     case "2" =>
       for {
-        _ <- IO(println(searchableFieldsOutput(userDatabase.searchFields)))
+        _ <- IO(println(searchableFieldsOutput(enrichedUserDatabase.searchFields)))
       } yield toStage(ProgramShowSearchOptions)
 
     case _ => IO.pure(toStage(ProgramShowSearchOptions))
@@ -54,9 +54,9 @@ case class Program(programStage: ProgramStage, userDatabase: UserDatabase) {
 
     case SearchQueryingValue(searchType, searchTerm) => {
       val stringifiedResults: List[String] = searchType match {
-        case SearchUser         => userDatabase.search(searchTerm, input).map(_.toString)
-        case SearchTicket       => userDatabase.search(searchTerm, input).map(_.toString) // use user database for now
-        case SearchOrganization => userDatabase.search(searchTerm, input).map(_.toString) // use user database for now
+        case SearchUser         => enrichedUserDatabase.search(searchTerm, input).map(_.toString)
+        case SearchTicket       => enrichedUserDatabase.search(searchTerm, input).map(_.toString) // use user database for now
+        case SearchOrganization => enrichedUserDatabase.search(searchTerm, input).map(_.toString) // use user database for now
       }
 
       for {

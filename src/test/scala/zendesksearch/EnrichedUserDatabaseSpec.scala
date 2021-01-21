@@ -4,7 +4,7 @@ import org.scalactic.TypeCheckedTripleEquals
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 
-class UserDatabaseSpec extends AnyFreeSpec with Matchers with TypeCheckedTripleEquals {
+class EnrichedUserDatabaseSpec extends AnyFreeSpec with Matchers with TypeCheckedTripleEquals {
   val user1 = User(
     1,
     "http://initech.zendesk.com/api/v2/users/1.json",
@@ -35,95 +35,116 @@ class UserDatabaseSpec extends AnyFreeSpec with Matchers with TypeCheckedTripleE
   val userWithNoOrganizationId =
     user1.copy(_id = 8, externalId = "fa13ffa4-0ba1-41d1-be4a-c1e7a92f25e4", organizationId = None)
 
-  val allUsers = List(
-    user1,
-    user2,
-    userWithNoAlias,
-    userWithNoVerified,
-    userWithNoLocale,
-    userWithNoTimezone,
-    userWithNoEmail,
-    userWithNoOrganizationId
+  val organization = Organization(
+    119,
+    "http://initech.zendesk.com/api/v2/organizations/119.json",
+    "9270ed79-35eb-4a38-a46f-35725197ea8d",
+    "Enthaze",
+    List("kage.com", "ecratic.com", "endipin.com", "zentix.com"),
+    "2016-05-21T11:10:28 -10:00",
+    "MegaCorp",
+    false,
+    List("Fulton", "West", "Rodriguez", "Farley")
   )
-  val database = new UserDatabase(allUsers)
+
+  val enrichedUser1 = EnrichedUser(user1, Some(organization))
+  val enrichedUser2 = enrichedUser1.copy(user = user2)
+  val enrichedUserWithNoAlias = enrichedUser1.copy(user = userWithNoAlias)
+  val enrichedUserWithNoVerified = enrichedUser1.copy(user = userWithNoVerified)
+  val enrichedUserWithNoLocale = enrichedUser1.copy(user = userWithNoLocale)
+  val enrichedUserWithNoTimezone = enrichedUser1.copy(user = userWithNoTimezone)
+  val enrichedUserWithNoEmail = enrichedUser1.copy(user = userWithNoEmail)
+  val enrichedUserWithNoOrganizationId = EnrichedUser(userWithNoOrganizationId, None)
+
+  val allEnrichedUsers = List(
+    enrichedUser1,
+    enrichedUser2,
+    enrichedUserWithNoAlias,
+    enrichedUserWithNoVerified,
+    enrichedUserWithNoLocale,
+    enrichedUserWithNoTimezone,
+    enrichedUserWithNoEmail,
+    enrichedUserWithNoOrganizationId
+  )
+  val database = new EnrichedUserDatabase(allEnrichedUsers)
 
   "searching" - {
     case class SearchTestCase(
       searchTerm: String,
       matchingSearchValue: String,
-      matches: List[User],
+      matches: List[EnrichedUser],
       nonMatchingSearchValue: String,
-      emptySearchValueMatches: Option[List[User]]
+      emptySearchValueMatches: Option[List[EnrichedUser]]
     )
 
     val testCases = List(
-      SearchTestCase("_id", "1", List(user1), "9999", None),
-      SearchTestCase("url", "http://initech.zendesk.com/api/v2/users/1.json", allUsers, "http://foo.com", None),
+      SearchTestCase("_id", "1", List(enrichedUser1), "9999", None),
+      SearchTestCase("url", "http://initech.zendesk.com/api/v2/users/1.json", allEnrichedUsers, "http://foo.com", None),
       SearchTestCase(
         "external_id",
         "74341f74-9c79-49d5-9611-87ef9b6eb75f",
-        List(user1),
+        List(enrichedUser1),
         "00000000-0000-0000-0000-000000000000",
         None
       ),
-      SearchTestCase("name", "Francisca Rasmussen", allUsers, "Foo", None),
+      SearchTestCase("name", "Francisca Rasmussen", allEnrichedUsers, "Foo", None),
       SearchTestCase(
         "alias",
         "Miss Coffey",
-        allUsers.filterNot(_ == userWithNoAlias),
+        allEnrichedUsers.filterNot(_ == enrichedUserWithNoAlias),
         "Bar",
-        Some(List(userWithNoAlias))
+        Some(List(enrichedUserWithNoAlias))
       ),
-      SearchTestCase("created_at", "2016-04-15T05:19:46 -10:00", allUsers, "9999-01-01T00:00:00 +00:00", None),
-      SearchTestCase("active", "true", allUsers, "false", None),
+      SearchTestCase("created_at", "2016-04-15T05:19:46 -10:00", allEnrichedUsers, "9999-01-01T00:00:00 +00:00", None),
+      SearchTestCase("active", "true", allEnrichedUsers, "false", None),
       SearchTestCase(
         "verified",
         "true",
-        allUsers.filterNot(_ == userWithNoVerified),
+        allEnrichedUsers.filterNot(_ == enrichedUserWithNoVerified),
         "false",
-        Some(List(userWithNoVerified))
+        Some(List(enrichedUserWithNoVerified))
       ),
-      SearchTestCase("shared", "false", allUsers, "true", None),
+      SearchTestCase("shared", "false", allEnrichedUsers, "true", None),
       SearchTestCase(
         "locale",
         "en-AU",
-        allUsers.filterNot(_ == userWithNoLocale),
+        allEnrichedUsers.filterNot(_ == enrichedUserWithNoLocale),
         "en-GB",
-        Some(List(userWithNoLocale))
+        Some(List(enrichedUserWithNoLocale))
       ),
       SearchTestCase(
         "timezone",
         "Sri Lanka",
-        allUsers.filterNot(_ == userWithNoTimezone),
+        allEnrichedUsers.filterNot(_ == enrichedUserWithNoTimezone),
         "Melbourne",
-        Some(List(userWithNoTimezone))
+        Some(List(enrichedUserWithNoTimezone))
       ),
-      SearchTestCase("last_login_at", "2013-08-04T01:03:27 -10:00", allUsers, "9999-01-01T00:00:00 +00:00", None),
+      SearchTestCase("last_login_at", "2013-08-04T01:03:27 -10:00", allEnrichedUsers, "9999-01-01T00:00:00 +00:00", None),
       SearchTestCase(
         "email",
         "coffeyrasmussen@flotonic.com",
-        allUsers.filterNot(_ == userWithNoEmail),
+        allEnrichedUsers.filterNot(_ == enrichedUserWithNoEmail),
         "test@test.com",
-        Some(List(userWithNoEmail))
+        Some(List(enrichedUserWithNoEmail))
       ),
-      SearchTestCase("phone", "8335-422-718", allUsers, "0000-000-000", None),
-      SearchTestCase("signature", "Don't Worry Be Happy!", allUsers, "Hello World!", None),
+      SearchTestCase("phone", "8335-422-718", allEnrichedUsers, "0000-000-000", None),
+      SearchTestCase("signature", "Don't Worry Be Happy!", allEnrichedUsers, "Hello World!", None),
       SearchTestCase(
         "organization_id",
         "119",
-        allUsers.filterNot(_ == userWithNoOrganizationId),
+        allEnrichedUsers.filterNot(_ == enrichedUserWithNoOrganizationId),
         "911",
-        Some(List(userWithNoOrganizationId))
+        Some(List(enrichedUserWithNoOrganizationId))
       ),
       SearchTestCase(
         "tags",
         """["Diaperville","Hartsville/Hartley","Springville","Sutton"]""",
-        allUsers,
+        allEnrichedUsers,
         """["Foo"]""",
         None
       ),
-      SearchTestCase("suspended", "true", allUsers, "false", None),
-      SearchTestCase("role", "admin", allUsers, "member", None)
+      SearchTestCase("suspended", "true", allEnrichedUsers, "false", None),
+      SearchTestCase("role", "admin", allEnrichedUsers, "member", None)
     )
 
     testCases.foreach { testCase =>

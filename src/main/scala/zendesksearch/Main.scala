@@ -7,11 +7,11 @@ import scala.io.StdIn.readLine
 object Main extends IOApp {
   def run(args: List[String]): IO[ExitCode] = for {
     users <- JsonFileReader.readAs[List[User]]("src/main/resources/users.json")
-    // for now, just testing that organizations.json can be decoded
-    _ <- JsonFileReader.readAs[List[Organization]]("src/main/resources/organizations.json")
-    userDatabase = UserDatabase(users)
+    organizations <- JsonFileReader.readAs[List[Organization]]("src/main/resources/organizations.json")
+    enrichedUsers = EnrichedUser.enrichAll(users, organizations)
+    enrichedUserDatabase = EnrichedUserDatabase(enrichedUsers)
     _ <- IO(println(welcomeMessage))
-    _ <- runProgram(Program(ProgramShowSearchOptions, userDatabase))
+    _ <- runProgram(Program(ProgramShowSearchOptions, enrichedUserDatabase))
   } yield ExitCode.Success
 
   private def runProgram(program: Program): IO[Unit] = for {
