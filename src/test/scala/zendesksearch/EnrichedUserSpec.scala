@@ -6,7 +6,7 @@ import org.scalatest.matchers.should.Matchers
 
 class EnrichedUserSpec extends AnyFreeSpec with Matchers with TypeCheckedTripleEquals {
   val baseOrganization = Organization(
-    1,
+    101,
     "http://initech.zendesk.com/api/v2/organizations/101.json",
     "9270ed79-35eb-4a38-a46f-35725197ea8d",
     "Enthaze",
@@ -199,6 +199,41 @@ class EnrichedUserSpec extends AnyFreeSpec with Matchers with TypeCheckedTripleE
           List(unrelatedAssignedTicket)
         ) should contain theSameElementsAs expectedEnrichedUsers
       }
+    }
+  }
+
+  "the Renderable instance" - {
+    "should produce the correct fields and values for rendering" in {
+      val fieldsAndValues = Renderable[EnrichedUser].apply(
+        EnrichedUser(baseUser, Some(baseOrganization), List(baseSubmittedTicket), List(baseAssignedTicket))
+      )
+
+      fieldsAndValues should ===(
+        List(
+          "_id" -> Some("1"),
+          "url" -> Some("http://initech.zendesk.com/api/v2/users/1.json"),
+          "external_id" -> Some("74341f74-9c79-49d5-9611-87ef9b6eb75f"),
+          "name" -> Some("Francisca Rasmussen"),
+          "alias" -> Some("Miss Coffey"),
+          "created_at" -> Some("2016-04-15T05:19:46 -10:00"),
+          "active" -> Some("true"),
+          "verified" -> Some("true"),
+          "shared" -> Some("false"),
+          "locale" -> Some("en-AU"),
+          "timezone" -> Some("Sri Lanka"),
+          "last_login_at" -> Some("2013-08-04T01:03:27 -10:00"),
+          "email" -> Some("coffeyrasmussen@flotonic.com"),
+          "phone" -> Some("8335-422-718"),
+          "signature" -> Some("Don't Worry Be Happy!"),
+          "organization_id" -> Some("101"),
+          "tags" -> Some("""["Springville","Sutton","Hartsville/Hartley","Diaperville"]"""),
+          "suspended" -> Some("true"),
+          "role" -> Some("admin"),
+          "organization_name" -> Some("Enthaze"),
+          "submitted_ticket_0" -> Some("A Catastrophe in Korea (North)"),
+          "assigned_ticket_0" -> Some("A Catastrophe in Micronesia")
+        )
+      )
     }
   }
 }

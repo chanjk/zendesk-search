@@ -2,11 +2,13 @@ name := "Zendesk Search"
 
 scalaVersion := "2.13.4"
 
+val asciitableVersion = "0.3.2"
 val catsEffectVersion = "2.3.1"
 val circeVersion = "0.13.0"
 val scalaTestVersion = "3.2.3"
 
 libraryDependencies ++= Seq(
+  "de.vandermeer" % "asciitable" % asciitableVersion,
   "io.circe" %% "circe-core" % circeVersion,
   "io.circe" %% "circe-generic" % circeVersion,
   "io.circe" %% "circe-generic-extras" % circeVersion,

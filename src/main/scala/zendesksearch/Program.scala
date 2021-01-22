@@ -44,6 +44,7 @@ case class Program(programStage: ProgramStage, enrichedUserDatabase: EnrichedUse
         case "3" => Some(SearchOrganization)
         case _   => None
       }
+
       maybeSearchType match {
         case Some(searchType) => IO.pure(toStage(ProgramSearchActive(SearchQueryingTerm(searchType))))
         case None             => IO.pure(toStage(ProgramSearchActive(searchStage)))
@@ -54,14 +55,13 @@ case class Program(programStage: ProgramStage, enrichedUserDatabase: EnrichedUse
 
     case SearchQueryingValue(searchType, searchTerm) => {
       val stringifiedResults: List[String] = searchType match {
-        case SearchUser         => enrichedUserDatabase.search(searchTerm, input).map(_.toString)
+        case SearchUser         => enrichedUserDatabase.search(searchTerm, input).map(ResultRenderer.render[EnrichedUser])
         case SearchTicket       => enrichedUserDatabase.search(searchTerm, input).map(_.toString) // use user database for now
         case SearchOrganization => enrichedUserDatabase.search(searchTerm, input).map(_.toString) // use user database for now
       }
+      val summary = s"${stringifiedResults.length} result(s) found with $searchTerm: '$input'"
 
-      for {
-        _ <- IO(println(stringifiedResults))
-      } yield toStage(ProgramShowSearchOptions)
+      IO(println(stringifiedResults.mkString(s"$summary\n", "\n\n", "\n"))).as(toStage(ProgramShowSearchOptions))
     }
   }
 
