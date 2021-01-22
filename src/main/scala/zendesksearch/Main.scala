@@ -19,7 +19,7 @@ object Main extends IOApp {
     getNextProgram <- program.tick
     input <- IO(readLine("> "))
     _ <- IO(println())
-    nextProgram <- input match {
+    nextProgram <- input.trim match {
       case quit if quit.toLowerCase == "quit" => IO(sys.exit())
       case otherInput => getNextProgram(otherInput)
     }
