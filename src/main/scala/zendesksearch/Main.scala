@@ -8,8 +8,8 @@ object Main extends IOApp {
   def run(args: List[String]): IO[ExitCode] = for {
     users <- JsonFileReader.readAs[List[User]]("src/main/resources/users.json")
     organizations <- JsonFileReader.readAs[List[Organization]]("src/main/resources/organizations.json")
-    _ <- JsonFileReader.readAs[List[Ticket]]("src/main/resources/tickets.json")
-    enrichedUsers = EnrichedUser.enrichAll(users, organizations)
+    tickets <- JsonFileReader.readAs[List[Ticket]]("src/main/resources/tickets.json")
+    enrichedUsers = EnrichedUser.enrichAll(users, organizations, tickets)
     enrichedUserDatabase = EnrichedUserDatabase(enrichedUsers)
     _ <- IO(println(welcomeMessage))
     _ <- runProgram(Program(ProgramShowSearchOptions, enrichedUserDatabase))

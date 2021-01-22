@@ -47,14 +47,14 @@ class EnrichedUserDatabaseSpec extends AnyFreeSpec with Matchers with TypeChecke
     List("Fulton", "West", "Rodriguez", "Farley")
   )
 
-  val enrichedUser1 = EnrichedUser(user1, Some(organization))
+  val enrichedUser1 = EnrichedUser(user1, Some(organization), Nil, Nil)
   val enrichedUser2 = enrichedUser1.copy(user = user2)
   val enrichedUserWithNoAlias = enrichedUser1.copy(user = userWithNoAlias)
   val enrichedUserWithNoVerified = enrichedUser1.copy(user = userWithNoVerified)
   val enrichedUserWithNoLocale = enrichedUser1.copy(user = userWithNoLocale)
   val enrichedUserWithNoTimezone = enrichedUser1.copy(user = userWithNoTimezone)
   val enrichedUserWithNoEmail = enrichedUser1.copy(user = userWithNoEmail)
-  val enrichedUserWithNoOrganizationId = EnrichedUser(userWithNoOrganizationId, None)
+  val enrichedUserWithNoOrganizationId = EnrichedUser(userWithNoOrganizationId, None, Nil, Nil)
 
   val allEnrichedUsers = List(
     enrichedUser1,
