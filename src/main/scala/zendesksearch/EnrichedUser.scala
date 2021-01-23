@@ -24,6 +24,30 @@ object EnrichedUser {
     )
   }
 
+  implicit val indexable: Indexable[EnrichedUser] = Indexable.fromIndexer(
+    Map(
+      "_id" -> (enrichedUser => Set(enrichedUser.user._id.toString)),
+      "url" -> (enrichedUser => Set(enrichedUser.user.url)),
+      "external_id" -> (enrichedUser => Set(enrichedUser.user.externalId)),
+      "name" -> (enrichedUser => Set(enrichedUser.user.name)),
+      "alias" -> (enrichedUser => enrichedUser.user.alias.toSet),
+      "created_at" -> (enrichedUser => Set(enrichedUser.user.createdAt)),
+      "active" -> (enrichedUser => Set(enrichedUser.user.active.toString)),
+      "verified" -> (enrichedUser => enrichedUser.user.verified.map(_.toString).toSet),
+      "shared" -> (enrichedUser => Set(enrichedUser.user.shared.toString)),
+      "locale" -> (enrichedUser => enrichedUser.user.locale.toSet),
+      "timezone" -> (enrichedUser => enrichedUser.user.timezone.toSet),
+      "last_login_at" -> (enrichedUser => Set(enrichedUser.user.lastLoginAt)),
+      "email" -> (enrichedUser => enrichedUser.user.email.toSet),
+      "phone" -> (enrichedUser => Set(enrichedUser.user.phone)),
+      "signature" -> (enrichedUser => Set(enrichedUser.user.signature)),
+      "organization_id" -> (enrichedUser => enrichedUser.user.organizationId.map(_.toString).toSet),
+      "tags" -> (enrichedUser => enrichedUser.user.tags.toSet),
+      "suspended" -> (enrichedUser => Set(enrichedUser.user.suspended.toString)),
+      "role" -> (enrichedUser => Set(enrichedUser.user.role))
+    )
+  )
+
   implicit val renderable: Renderable[EnrichedUser] = {
     case EnrichedUser(user, organization, submittedTickets, assignedTickets) => {
       val userFields = List(
@@ -43,7 +67,7 @@ object EnrichedUser {
         "phone" -> Some(user.phone),
         "signature" -> Some(user.signature),
         "organization_id" -> user.organizationId.map(_.toString),
-        "tags" -> Some(user.tags.map(tag => s""""$tag"""").mkString("[", ",", "]")),
+        "tags" -> Some(user.tags.map(tag => s""""$tag"""").mkString(",")),
         "suspended" -> Some(user.suspended.toString),
         "role" -> Some(user.role)
       )

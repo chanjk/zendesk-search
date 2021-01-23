@@ -10,7 +10,7 @@ object Main extends IOApp {
     organizations <- JsonFileReader.readAs[List[Organization]]("src/main/resources/organizations.json")
     tickets <- JsonFileReader.readAs[List[Ticket]]("src/main/resources/tickets.json")
     enrichedUsers = EnrichedUser.enrichAll(users, organizations, tickets)
-    enrichedUserDatabase = EnrichedUserDatabase(enrichedUsers)
+    enrichedUserDatabase = Database[EnrichedUser](enrichedUsers)
     _ <- IO(println(welcomeMessage))
     _ <- runProgram(Program(ProgramShowSearchOptions, enrichedUserDatabase))
   } yield ExitCode.Success
