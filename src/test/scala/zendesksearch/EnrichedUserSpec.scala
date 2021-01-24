@@ -262,8 +262,8 @@ class EnrichedUserSpec extends AnyFreeSpec with Matchers with TypeCheckedTripleE
           "suspended" -> Some("true"),
           "role" -> Some("admin"),
           "organization_name" -> Some("Enthaze"),
-          "submitted_ticket_0" -> Some("A Catastrophe in Korea (North)"),
-          "assigned_ticket_0" -> Some("A Catastrophe in Micronesia")
+          "submitted_ticket_subject_0" -> Some("A Catastrophe in Korea (North)"),
+          "assigned_ticket_subject_0" -> Some("A Catastrophe in Micronesia")
         )
       )
     }

@@ -73,10 +73,10 @@ object EnrichedUser {
       )
       val organizationFields = List("organization_name" -> organization.map(_.name))
       val submittedTicketsFields = submittedTickets.zipWithIndex.map { case (ticket, index) =>
-        s"submitted_ticket_$index" -> Some(ticket.subject)
+        s"submitted_ticket_subject_$index" -> Some(ticket.subject)
       }
       val assignedTicketsFields = assignedTickets.zipWithIndex.map { case (ticket, index) =>
-        s"assigned_ticket_$index" -> Some(ticket.subject)
+        s"assigned_ticket_subject_$index" -> Some(ticket.subject)
       }
 
       userFields ++ organizationFields ++ submittedTicketsFields ++ assignedTicketsFields

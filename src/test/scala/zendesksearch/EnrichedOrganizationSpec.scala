@@ -161,8 +161,8 @@ class EnrichedOrganizationSpec extends AnyFreeSpec with Matchers with TypeChecke
           "details" -> Some("MegaCorp"),
           "shared_tickets" -> Some("false"),
           "tags" -> Some(""""Fulton","West","Rodriguez","Farley""""),
-          "user_0" -> Some("Francisca Rasmussen"),
-          "ticket_0" -> Some("A Catastrophe in Korea (North)")
+          "user_name_0" -> Some("Francisca Rasmussen"),
+          "ticket_subject_0" -> Some("A Catastrophe in Korea (North)")
         )
       )
     }
