@@ -10,11 +10,13 @@ object Main extends IOApp {
     organizations <- JsonFileReader.readAs[List[Organization]]("src/main/resources/organizations.json")
     tickets <- JsonFileReader.readAs[List[Ticket]]("src/main/resources/tickets.json")
     enrichedUsers = EnrichedUser.enrichAll(users, organizations, tickets)
+    enrichedTickets = EnrichedTicket.enrichAll(tickets, organizations, users)
     enrichedOrganizations = EnrichedOrganization.enrichAll(organizations, users, tickets)
-    enrichedUserDatabase = Database[EnrichedUser](enrichedUsers)
-    enrichedOrganizationDatabase = Database[EnrichedOrganization](enrichedOrganizations)
+    enrichedUserDatabase = Database(enrichedUsers)
+    enrichedTicketDatabase = Database(enrichedTickets)
+    enrichedOrganizationDatabase = Database(enrichedOrganizations)
     _ <- IO(println(welcomeMessage))
-    _ <- runProgram(Program(ProgramShowSearchOptions, enrichedUserDatabase, enrichedOrganizationDatabase))
+    _ <- runProgram(Program(ProgramShowSearchOptions, enrichedUserDatabase, enrichedTicketDatabase, enrichedOrganizationDatabase))
   } yield ExitCode.Success
 
   private def runProgram(program: Program): IO[Unit] = for {

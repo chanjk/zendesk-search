@@ -49,7 +49,6 @@ object EnrichedOrganization {
         "shared_tickets" -> Some(organization.sharedTickets.toString),
         "tags" -> Some(organization.tags.map(tag => s""""$tag"""").mkString(","))
       )
-
       val usersFields = users.zipWithIndex.map { case (user, index) => s"user_$index" -> Some(user.name) }
       val ticketsFields = tickets.zipWithIndex.map { case (ticket, index) => s"ticket_$index" -> Some(ticket.subject) }
 

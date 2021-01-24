@@ -5,6 +5,7 @@ import cats.effect._
 case class Program(
   programStage: ProgramStage,
   enrichedUserDatabase: Database[EnrichedUser],
+  enrichedTicketDatabase: Database[EnrichedTicket],
   enrichedOrganizationDatabase: Database[EnrichedOrganization]
 ) {
   def tick: IO[String => IO[Program]] = run.as(handleInput)
@@ -35,7 +36,7 @@ case class Program(
     case "2" =>
       for {
         _ <- IO(
-          println(searchableFieldsOutput(enrichedUserDatabase.searchFields, enrichedOrganizationDatabase.searchFields))
+          println(searchableFieldsOutput(enrichedUserDatabase.searchFields, enrichedTicketDatabase.searchFields, enrichedOrganizationDatabase.searchFields))
         )
       } yield toStage(ProgramShowSearchOptions)
 
@@ -67,7 +68,7 @@ case class Program(
         case SearchUser =>
           enrichedUserDatabase.search(searchField, searchValue).map(ResultRenderer.render[EnrichedUser])
         case SearchTicket =>
-          enrichedUserDatabase.search(searchField, searchValue).map(_.toString) // use user database for now
+          enrichedTicketDatabase.search(searchField, searchValue).map(ResultRenderer.render[EnrichedTicket])
         case SearchOrganization =>
           enrichedOrganizationDatabase.search(searchField, searchValue).map(ResultRenderer.render[EnrichedOrganization])
       }
@@ -92,11 +93,16 @@ case class Program(
 
   private def searchableFieldsOutput(
     enrichedUserSearchFields: List[String],
+    enrichedTicketSearchFields: List[String],
     enrichedOrganizationSearchFields: List[String]
   ): String =
     s"""Search Users with:
        |
        |${enrichedUserSearchFields.mkString("\n")}
+       |------------------------------------------
+       |Search Tickets with:
+       |
+       |${enrichedTicketSearchFields.mkString("\n")}
        |------------------------------------------
        |Search Organizations with:
        |
