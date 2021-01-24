@@ -24,28 +24,29 @@ object EnrichedUser {
     )
   }
 
-  implicit val indexable: Indexable[EnrichedUser] = enrichedUser =>
+  implicit val indexable: Indexable[EnrichedUser] = { case EnrichedUser(user, _, _, _) =>
     Map(
-      "_id" -> Set(enrichedUser.user._id.toString),
-      "url" -> Set(enrichedUser.user.url),
-      "external_id" -> Set(enrichedUser.user.externalId),
-      "name" -> Set(enrichedUser.user.name),
-      "alias" -> enrichedUser.user.alias.toSet,
-      "created_at" -> Set(enrichedUser.user.createdAt),
-      "active" -> Set(enrichedUser.user.active.toString),
-      "verified" -> enrichedUser.user.verified.map(_.toString).toSet,
-      "shared" -> Set(enrichedUser.user.shared.toString),
-      "locale" -> enrichedUser.user.locale.toSet,
-      "timezone" -> enrichedUser.user.timezone.toSet,
-      "last_login_at" -> Set(enrichedUser.user.lastLoginAt),
-      "email" -> enrichedUser.user.email.toSet,
-      "phone" -> Set(enrichedUser.user.phone),
-      "signature" -> Set(enrichedUser.user.signature),
-      "organization_id" -> enrichedUser.user.organizationId.map(_.toString).toSet,
-      "tags" -> enrichedUser.user.tags.toSet,
-      "suspended" -> Set(enrichedUser.user.suspended.toString),
-      "role" -> Set(enrichedUser.user.role)
+      "_id" -> Set(user._id.toString),
+      "url" -> Set(user.url),
+      "external_id" -> Set(user.externalId),
+      "name" -> Set(user.name),
+      "alias" -> user.alias.toSet,
+      "created_at" -> Set(user.createdAt),
+      "active" -> Set(user.active.toString),
+      "verified" -> user.verified.map(_.toString).toSet,
+      "shared" -> Set(user.shared.toString),
+      "locale" -> user.locale.toSet,
+      "timezone" -> user.timezone.toSet,
+      "last_login_at" -> Set(user.lastLoginAt),
+      "email" -> user.email.toSet,
+      "phone" -> Set(user.phone),
+      "signature" -> Set(user.signature),
+      "organization_id" -> user.organizationId.map(_.toString).toSet,
+      "tags" -> user.tags.toSet,
+      "suspended" -> Set(user.suspended.toString),
+      "role" -> Set(user.role)
     )
+  }
 
   implicit val renderable: Renderable[EnrichedUser] = {
     case EnrichedUser(user, organization, submittedTickets, assignedTickets) => {

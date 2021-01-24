@@ -8,7 +8,7 @@ import cats.syntax.all._
 import java.io.File
 
 object JsonFileReader {
-  def readAs[A : Decoder](filePath: String): IO[A] =
+  def readAs[A: Decoder](filePath: String): IO[A] =
     IO.suspend {
       val errorOrData = decodeFile[A](new File(filePath))
         .leftMap(error => FileDecodeError(filePath, error.show))

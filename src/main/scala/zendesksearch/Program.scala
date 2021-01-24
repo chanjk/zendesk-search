@@ -2,7 +2,11 @@ package zendesksearch
 
 import cats.effect._
 
-case class Program(programStage: ProgramStage, enrichedUserDatabase: Database[EnrichedUser]) {
+case class Program(
+  programStage: ProgramStage,
+  enrichedUserDatabase: Database[EnrichedUser],
+  enrichedOrganizationDatabase: Database[EnrichedOrganization]
+) {
   def tick: IO[String => IO[Program]] = run.as(handleInput)
 
   private def toStage(programStage: ProgramStage): Program = copy(programStage = programStage)
@@ -16,7 +20,7 @@ case class Program(programStage: ProgramStage, enrichedUserDatabase: Database[En
 
   private def runProgramSearchActive(searchStage: SearchStage): IO[Unit] = searchStage match {
     case SearchQueryingType        => IO(println(searchQueryingTypeMessage))
-    case SearchQueryingField(_)     => IO(println(searchQueryingFieldMessage))
+    case SearchQueryingField(_)    => IO(println(searchQueryingFieldMessage))
     case SearchQueryingValue(_, _) => IO(println(searchQueryingValueMessage))
   }
 
@@ -30,7 +34,9 @@ case class Program(programStage: ProgramStage, enrichedUserDatabase: Database[En
 
     case "2" =>
       for {
-        _ <- IO(println(searchableFieldsOutput(enrichedUserDatabase.searchFields)))
+        _ <- IO(
+          println(searchableFieldsOutput(enrichedUserDatabase.searchFields, enrichedOrganizationDatabase.searchFields))
+        )
       } yield toStage(ProgramShowSearchOptions)
 
     case _ => IO.pure(toStage(ProgramShowSearchOptions))
@@ -51,15 +57,19 @@ case class Program(programStage: ProgramStage, enrichedUserDatabase: Database[En
       }
     }
 
-    case SearchQueryingField(searchType) => IO.pure(toStage(ProgramSearchActive(SearchQueryingValue(searchType, input))))
+    case SearchQueryingField(searchType) =>
+      IO.pure(toStage(ProgramSearchActive(SearchQueryingValue(searchType, input))))
 
     case SearchQueryingValue(searchType, searchField) => {
       val searchValue = Some(input).filter(_.nonEmpty)
 
       val stringifiedResults: List[String] = searchType match {
-        case SearchUser         => enrichedUserDatabase.search(searchField, searchValue).map(ResultRenderer.render[EnrichedUser])
-        case SearchTicket       => enrichedUserDatabase.search(searchField, searchValue).map(_.toString) // use user database for now
-        case SearchOrganization => enrichedUserDatabase.search(searchField, searchValue).map(_.toString) // use user database for now
+        case SearchUser =>
+          enrichedUserDatabase.search(searchField, searchValue).map(ResultRenderer.render[EnrichedUser])
+        case SearchTicket =>
+          enrichedUserDatabase.search(searchField, searchValue).map(_.toString) // use user database for now
+        case SearchOrganization =>
+          enrichedOrganizationDatabase.search(searchField, searchValue).map(ResultRenderer.render[EnrichedOrganization])
       }
       val summary = s"${stringifiedResults.length} result(s) found with $searchField: '$input'"
 
@@ -80,9 +90,16 @@ case class Program(programStage: ProgramStage, enrichedUserDatabase: Database[En
 
   private val searchQueryingValueMessage: String = "Enter search value"
 
-  private def searchableFieldsOutput(userSearchFields: List[String]): String =
+  private def searchableFieldsOutput(
+    enrichedUserSearchFields: List[String],
+    enrichedOrganizationSearchFields: List[String]
+  ): String =
     s"""Search Users with:
        |
-       |${userSearchFields.mkString("\n")}
+       |${enrichedUserSearchFields.mkString("\n")}
+       |------------------------------------------
+       |Search Organizations with:
+       |
+       |${enrichedOrganizationSearchFields.mkString("\n")}
        |""".stripMargin
 }
