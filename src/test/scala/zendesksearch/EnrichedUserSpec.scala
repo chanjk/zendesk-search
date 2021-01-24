@@ -3,7 +3,6 @@ package zendesksearch
 import org.scalactic.TypeCheckedTripleEquals
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
-import zendesksearch.Indexable.{SearchField, SearchValue}
 
 class EnrichedUserSpec extends AnyFreeSpec with Matchers with TypeCheckedTripleEquals {
   val baseOrganization = Organization(
@@ -204,56 +203,32 @@ class EnrichedUserSpec extends AnyFreeSpec with Matchers with TypeCheckedTripleE
   }
 
   "the Indexable instance" - {
-    "should define the correct index for searching" in {
-      val user1 = baseUser
-      val user2 = baseUser.copy(
-        _id = baseUser._id + 1,
-        externalId = "c9995ea4-ff72-46e0-ab77-dfe0ae1ef6c2",
-        alias = None,
-        verified = None,
-        locale = None,
-        timezone = None,
-        email = None,
-        organizationId = None,
-        tags = Nil
+    "should define the correct fields and values for searching" in {
+      val fieldsToValues = Indexable[EnrichedUser].apply(
+        EnrichedUser(baseUser, Some(baseOrganization), List(baseSubmittedTicket), List(baseAssignedTicket))
       )
 
-      val enrichedUser1 =
-        EnrichedUser(user1, Some(baseOrganization), List(baseSubmittedTicket), List(baseAssignedTicket))
-      val enrichedUser2 = EnrichedUser(user2, None, Nil, Nil)
-      val allEnrichedUsers = List(enrichedUser1, enrichedUser2)
-      val index = Indexable[EnrichedUser].apply(List(enrichedUser1, enrichedUser2))
-
-      index should ===(
-        Map[SearchField, Map[Option[SearchValue], List[EnrichedUser]]](
-          "_id" -> Map(Some("1") -> List(enrichedUser1), Some("2") -> List(enrichedUser2)),
-          "url" -> Map(Some("http://initech.zendesk.com/api/v2/users/1.json") -> allEnrichedUsers),
-          "external_id" -> Map(
-            Some("74341f74-9c79-49d5-9611-87ef9b6eb75f") -> List(enrichedUser1),
-            Some("c9995ea4-ff72-46e0-ab77-dfe0ae1ef6c2") -> List(enrichedUser2)
-          ),
-          "name" -> Map(Some("Francisca Rasmussen") -> List(enrichedUser1, enrichedUser2)),
-          "alias" -> Map(Some("Miss Coffey") -> List(enrichedUser1), None -> List(enrichedUser2)),
-          "created_at" -> Map(Some("2016-04-15T05:19:46 -10:00") -> allEnrichedUsers),
-          "active" -> Map(Some("true") -> allEnrichedUsers),
-          "verified" -> Map(Some("true") -> List(enrichedUser1), None -> List(enrichedUser2)),
-          "shared" -> Map(Some("false") -> allEnrichedUsers),
-          "locale" -> Map(Some("en-AU") -> List(enrichedUser1), None -> List(enrichedUser2)),
-          "timezone" -> Map(Some("Sri Lanka") -> List(enrichedUser1), None -> List(enrichedUser2)),
-          "last_login_at" -> Map(Some("2013-08-04T01:03:27 -10:00") -> allEnrichedUsers),
-          "email" -> Map(Some("coffeyrasmussen@flotonic.com") -> List(enrichedUser1), None -> List(enrichedUser2)),
-          "phone" -> Map(Some("8335-422-718") -> allEnrichedUsers),
-          "signature" -> Map(Some("Don't Worry Be Happy!") -> allEnrichedUsers),
-          "organization_id" -> Map(Some("101") -> List(enrichedUser1), None -> List(enrichedUser2)),
-          "tags" -> Map(
-            Some("Springville") -> List(enrichedUser1),
-            Some("Sutton") -> List(enrichedUser1),
-            Some("Hartsville/Hartley") -> List(enrichedUser1),
-            Some("Diaperville") -> List(enrichedUser1),
-            None -> List(enrichedUser2)
-          ),
-          "suspended" -> Map(Some("true") -> allEnrichedUsers),
-          "role" -> Map(Some("admin") -> allEnrichedUsers)
+      fieldsToValues should ===(
+        Map(
+          "_id" -> Set("1"),
+          "url" -> Set("http://initech.zendesk.com/api/v2/users/1.json"),
+          "external_id" -> Set("74341f74-9c79-49d5-9611-87ef9b6eb75f"),
+          "name" -> Set("Francisca Rasmussen"),
+          "alias" -> Set("Miss Coffey"),
+          "created_at" -> Set("2016-04-15T05:19:46 -10:00"),
+          "active" -> Set("true"),
+          "verified" -> Set("true"),
+          "shared" -> Set("false"),
+          "locale" -> Set("en-AU"),
+          "timezone" -> Set("Sri Lanka"),
+          "last_login_at" -> Set("2013-08-04T01:03:27 -10:00"),
+          "email" -> Set("coffeyrasmussen@flotonic.com"),
+          "phone" -> Set("8335-422-718"),
+          "signature" -> Set("Don't Worry Be Happy!"),
+          "organization_id" -> Set("101"),
+          "tags" -> Set("Springville", "Sutton", "Hartsville/Hartley", "Diaperville"),
+          "suspended" -> Set("true"),
+          "role" -> Set("admin")
         )
       )
     }

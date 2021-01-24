@@ -24,29 +24,28 @@ object EnrichedUser {
     )
   }
 
-  implicit val indexable: Indexable[EnrichedUser] = Indexable.fromIndexer(
+  implicit val indexable: Indexable[EnrichedUser] = enrichedUser =>
     Map(
-      "_id" -> (enrichedUser => Set(enrichedUser.user._id.toString)),
-      "url" -> (enrichedUser => Set(enrichedUser.user.url)),
-      "external_id" -> (enrichedUser => Set(enrichedUser.user.externalId)),
-      "name" -> (enrichedUser => Set(enrichedUser.user.name)),
-      "alias" -> (enrichedUser => enrichedUser.user.alias.toSet),
-      "created_at" -> (enrichedUser => Set(enrichedUser.user.createdAt)),
-      "active" -> (enrichedUser => Set(enrichedUser.user.active.toString)),
-      "verified" -> (enrichedUser => enrichedUser.user.verified.map(_.toString).toSet),
-      "shared" -> (enrichedUser => Set(enrichedUser.user.shared.toString)),
-      "locale" -> (enrichedUser => enrichedUser.user.locale.toSet),
-      "timezone" -> (enrichedUser => enrichedUser.user.timezone.toSet),
-      "last_login_at" -> (enrichedUser => Set(enrichedUser.user.lastLoginAt)),
-      "email" -> (enrichedUser => enrichedUser.user.email.toSet),
-      "phone" -> (enrichedUser => Set(enrichedUser.user.phone)),
-      "signature" -> (enrichedUser => Set(enrichedUser.user.signature)),
-      "organization_id" -> (enrichedUser => enrichedUser.user.organizationId.map(_.toString).toSet),
-      "tags" -> (enrichedUser => enrichedUser.user.tags.toSet),
-      "suspended" -> (enrichedUser => Set(enrichedUser.user.suspended.toString)),
-      "role" -> (enrichedUser => Set(enrichedUser.user.role))
+      "_id" -> Set(enrichedUser.user._id.toString),
+      "url" -> Set(enrichedUser.user.url),
+      "external_id" -> Set(enrichedUser.user.externalId),
+      "name" -> Set(enrichedUser.user.name),
+      "alias" -> enrichedUser.user.alias.toSet,
+      "created_at" -> Set(enrichedUser.user.createdAt),
+      "active" -> Set(enrichedUser.user.active.toString),
+      "verified" -> enrichedUser.user.verified.map(_.toString).toSet,
+      "shared" -> Set(enrichedUser.user.shared.toString),
+      "locale" -> enrichedUser.user.locale.toSet,
+      "timezone" -> enrichedUser.user.timezone.toSet,
+      "last_login_at" -> Set(enrichedUser.user.lastLoginAt),
+      "email" -> enrichedUser.user.email.toSet,
+      "phone" -> Set(enrichedUser.user.phone),
+      "signature" -> Set(enrichedUser.user.signature),
+      "organization_id" -> enrichedUser.user.organizationId.map(_.toString).toSet,
+      "tags" -> enrichedUser.user.tags.toSet,
+      "suspended" -> Set(enrichedUser.user.suspended.toString),
+      "role" -> Set(enrichedUser.user.role)
     )
-  )
 
   implicit val renderable: Renderable[EnrichedUser] = {
     case EnrichedUser(user, organization, submittedTickets, assignedTickets) => {
