@@ -1,9 +1,9 @@
-package zendesksearch
+package zendesksearch.execution
 
 import cats.effect.IO
+import cats.syntax.all._
 import io.circe.Decoder
 import io.circe.jawn.decodeFile
-import cats.syntax.all._
 
 import java.io.File
 

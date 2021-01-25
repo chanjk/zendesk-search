@@ -1,4 +1,4 @@
-package zendesksearch
+package zendesksearch.execution
 
 import io.circe.Decoder
 import io.circe.generic.semiauto.deriveDecoder

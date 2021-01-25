@@ -1,8 +1,9 @@
-package zendesksearch
+package zendesksearch.execution
 
 import org.scalactic.TypeCheckedTripleEquals
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
+import zendesksearch.database.Renderable
 
 class ResultRendererSpec extends AnyFreeSpec with Matchers with TypeCheckedTripleEquals {
   case class Foo(id: Int, name: String, active: Boolean)

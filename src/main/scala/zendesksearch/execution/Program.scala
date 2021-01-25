@@ -1,6 +1,7 @@
-package zendesksearch
+package zendesksearch.execution
 
 import cats.effect._
+import zendesksearch.database._
 
 case class Program(
   programStage: ProgramStage,

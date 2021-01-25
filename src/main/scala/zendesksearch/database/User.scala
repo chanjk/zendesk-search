@@ -1,4 +1,4 @@
-package zendesksearch
+package zendesksearch.database
 
 import io.circe.Decoder
 import io.circe.generic.extras.Configuration

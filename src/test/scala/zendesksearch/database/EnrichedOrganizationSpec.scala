@@ -1,4 +1,4 @@
-package zendesksearch
+package zendesksearch.database
 
 import org.scalactic.TypeCheckedTripleEquals
 import org.scalatest.freespec.AnyFreeSpec

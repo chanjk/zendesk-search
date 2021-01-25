@@ -1,4 +1,4 @@
-package zendesksearch
+package zendesksearch.execution
 
 sealed trait ProgramStage
 case object ProgramShowSearchOptions extends ProgramStage

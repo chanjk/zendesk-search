@@ -1,6 +1,8 @@
 package zendesksearch
 
 import cats.effect._
+import zendesksearch.database._
+import zendesksearch.execution._
 
 import scala.io.StdIn.readLine
 
@@ -9,12 +11,15 @@ object Main extends IOApp {
     users <- JsonFileReader.readAs[List[User]]("src/main/resources/users.json")
     organizations <- JsonFileReader.readAs[List[Organization]]("src/main/resources/organizations.json")
     tickets <- JsonFileReader.readAs[List[Ticket]]("src/main/resources/tickets.json")
+
     enrichedUsers = EnrichedUser.enrichAll(users, organizations, tickets)
     enrichedTickets = EnrichedTicket.enrichAll(tickets, organizations, users)
     enrichedOrganizations = EnrichedOrganization.enrichAll(organizations, users, tickets)
+
     enrichedUserDatabase = Database(enrichedUsers)
     enrichedTicketDatabase = Database(enrichedTickets)
     enrichedOrganizationDatabase = Database(enrichedOrganizations)
+
     _ <- IO(println(welcomeMessage))
     _ <- runProgram(Program(ProgramShowSearchOptions, enrichedUserDatabase, enrichedTicketDatabase, enrichedOrganizationDatabase))
   } yield ExitCode.Success

@@ -1,4 +1,4 @@
-package zendesksearch
+package zendesksearch.database
 
 import io.circe.literal._
 import org.scalactic.TypeCheckedTripleEquals

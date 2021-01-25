@@ -1,4 +1,4 @@
-package zendesksearch
+package zendesksearch.database
 
 case class EnrichedUser(
   user: User,

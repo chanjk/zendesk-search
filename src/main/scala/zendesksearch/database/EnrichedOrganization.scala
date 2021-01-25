@@ -1,4 +1,4 @@
-package zendesksearch
+package zendesksearch.database
 
 case class EnrichedOrganization(organization: Organization, users: List[User], tickets: List[Ticket])
 

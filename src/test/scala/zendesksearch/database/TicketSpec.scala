@@ -1,4 +1,4 @@
-package zendesksearch
+package zendesksearch.database
 
 import io.circe.literal._
 import org.scalactic.TypeCheckedTripleEquals
@@ -17,7 +17,7 @@ class TicketSpec extends AnyFreeSpec with Matchers with TypeCheckedTripleEquals 
             "created_at": "2016-04-28T11:19:34 -10:00",
             "type": "incident",
             "subject": "A Catastrophe in Korea (North)",
-            "description": "Nostrud ad sit velit cupidatat laboris ipsum nisi amet laboris ex exercitation amet et proident. Ipsum fugiat aute dolore tempor nostrud velit ipsum.",
+            "description": "Nostrud ad sit velit cupidatat laboris",
             "priority": "high",
             "status": "pending",
             "submitter_id": 38,
@@ -42,7 +42,7 @@ class TicketSpec extends AnyFreeSpec with Matchers with TypeCheckedTripleEquals 
           "2016-04-28T11:19:34 -10:00",
           Some("incident"),
           "A Catastrophe in Korea (North)",
-          Some("Nostrud ad sit velit cupidatat laboris ipsum nisi amet laboris ex exercitation amet et proident. Ipsum fugiat aute dolore tempor nostrud velit ipsum."),
+          Some("Nostrud ad sit velit cupidatat laboris"),
           "high",
           "pending",
           38,

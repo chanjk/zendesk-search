@@ -1,7 +1,6 @@
-package zendesksearch
+package zendesksearch.database
 
 import cats.Monoid
-import zendesksearch.Indexable._
 
 case class Database[A: Indexable](records: List[A]) {
   private val index: Index[A] = {

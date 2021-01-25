@@ -1,4 +1,4 @@
-package zendesksearch
+package zendesksearch.database
 
 trait Renderable[A] {
   def apply(value: A): List[(String, Option[String])]
