@@ -353,7 +353,7 @@ class ProgramSpec extends AnyFreeSpec with Matchers with TypeCheckedTripleEquals
 
       "when an empty search value is received as input" - {
         "when there are records that are missing a value for that search field" - {
-          "should print those record" in {
+          "should print those records" in {
             val program =
               currentProgram.copy(programStage = ProgramSearching(SearchQueryingValue(SearchUser, "organization_id")))
             val handler = program.tick.attempt.unsafeRunSync().value
