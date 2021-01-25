@@ -41,4 +41,13 @@ class JsonFileReaderSpec extends AnyFreeSpec with Matchers with TypeCheckedTripl
       io.attempt.unsafeRunSync() should matchPattern { case Left(FileDecodeError(`filePath`, _)) => }
     }
   }
+
+  "decoding a file that does not exist" - {
+    "should produce an appropriate error" in {
+      val filePath = "path/to/nothing.json"
+      val io = JsonFileReader.readAs[List[Foo]](filePath)
+
+      io.attempt.unsafeRunSync() should matchPattern { case Left(FileDecodeError(`filePath`, _)) => }
+    }
+  }
 }
