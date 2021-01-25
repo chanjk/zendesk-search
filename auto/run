@@ -2,4 +2,4 @@
 
 cd $(dirname $0)/..
 
-./sbt run
+./sbt assembly && java -jar output/app.jar

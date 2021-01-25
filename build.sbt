@@ -57,3 +57,15 @@ scalacOptions ++= Seq(
   "-Ycache-plugin-class-loader:last-modified", // Enables caching of classloaders for compiler plugins
   "-Ycache-macro-class-loader:last-modified", // and macro definitions. This can lead to performance improvements.
 )
+
+assemblyOutputPath in assembly := new File("output/app.jar")
+
+assemblyMergeStrategy in assembly := {
+  case "CHANGELOG.html" => MergeStrategy.discard
+  case "CHANGELOG.adoc" => MergeStrategy.discard
+  case x =>
+    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    oldStrategy(x)
+}
+
+test in assembly := {}

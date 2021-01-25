@@ -41,6 +41,8 @@ $ javac -version // should output `javac 11.x.y.z`
 
 ## Running the app
 
+Note that the application takes a fair bit longer to start if using Docker.
+
 ### With Docker
 
 ```sh
