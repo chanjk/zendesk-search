@@ -15,7 +15,7 @@ case class Database[A: Indexable](records: List[A]) {
       }
     })
 
-    // recursively combine all the mappings, concatenating the results for identical keys
+    // recursively combine all the mappings, concatenating any lists belonging to identical keys
     Monoid[Index[A]].combineAll(expandedMappings)
   }
 

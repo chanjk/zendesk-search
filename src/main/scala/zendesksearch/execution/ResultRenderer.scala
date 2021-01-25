@@ -1,6 +1,7 @@
 package zendesksearch.execution
 
 import de.vandermeer.asciitable.AsciiTable
+import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment
 import zendesksearch.database.Renderable
 
 import scala.util.chaining._
@@ -16,6 +17,6 @@ object ResultRenderer {
         .tap(_.addRule())
     )
 
-    table.render()
+    table.setTextAlignment(TextAlignment.LEFT).render()
   }
 }
