@@ -6,11 +6,12 @@ case class Database[A: Indexable](records: List[A]) {
   private val index: Index[A] = {
     val expandedMappings: List[Index[A]] = records.map(record => {
       val mapping: Map[SearchField, Set[SearchValue]] = Indexable[A].apply(record)
+      val recordList: List[A] = List(record)
 
       mapping.map { case (searchField, searchValues) =>
         searchField -> Map.from {
-          if (searchValues.isEmpty) Set(None -> List(record))
-          else searchValues.map(Some(_) -> List(record))
+          if (searchValues.isEmpty) Set(None -> recordList)
+          else searchValues.map(Some(_) -> recordList)
         }
       }
     })
