@@ -112,13 +112,13 @@ Enter search value
 
 After you have provided a search field, you can provide the value that you want to search for. Example: `1`.
 
-To search against Boolean values, use either `"true"` or `"false"`.
+To search against Boolean values, use either `true` or `false`.
 
 To search against a list of values, only one value in the list has to be provided. Example: a user might have `Veguita`, `Navarre`, `Elizaville`, and `Beaulieu` as its `tags` – providing `tags` as the search field and `Navarre` as the search value will match this user.
 
 Once you have provided a search value, the application will search for all records that match your selected search type, search field, and search value. Example: search for all users that have an `_id` of `1`. The results will be printed to the screen.
 
-Note that search values are matched _fully_ and _case-sensitively_ (`"mar"` won't return matches for `"mary"` or `"Mar"`).
+Note that search values are matched _fully_ and _case-sensitively_ (`mar` won't return matches for `mary` or `Mar`).
 
 You can also provide an empty search value (by just pressing <kbd>Enter</kbd> without any other input when prompted for a search value), and the application will return the records that don't have any value for the chosen search field. This can be used to search for users that don't belong to any organization, for example.
 
@@ -203,7 +203,7 @@ To ensure that search times are fast and do not increase linearly with the numbe
 
 The index is structured like so:
 
-_Search field_ -> _Search value_ -> _List of matches_
+_Search field_ -> _Search value (can be empty)_ -> _List of matches_
 
 which requires a lot of memory as the records are replicated across the index for the matching search fields and values.
 
@@ -229,11 +229,11 @@ However, if there is a valid change to the schema, or our assumptions about the 
 
 When provided with a search value by the user, the search will match the search value _fully_ and _case-sensitively_.
 
-This means that searching for `"mar"` won't return matches for `"mary"` or `"Mar"`, for example.
+This means that searching for `mar` won't return matches for `mary` or `Mar`, for example.
 
 Reasons for this decision:
-- Matching the search value fully simplifies the application and ensures that search remains fast and/or does not require more memory.
-- Matching the search value case-sensitively avoids the issue where the semantics of some strings might change after lower- or upper-casing. For example, the URL `https://example.com/foo` is not the same as the URL `https://example.com/Foo`.
+- Matching the search value fully simplifies the application and ensures that search remains fast and/or does not require even more memory.
+- Matching the search value case-sensitively avoids the issue where the semantics of some strings are case-sensitive. For example, the URL `https://example.com/foo` is not the same as the URL `https://example.com/Foo`.
 
 **Tradeoff**
 
