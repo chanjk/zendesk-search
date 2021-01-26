@@ -1,5 +1,7 @@
 # Zendesk Search
 
+![.github/workflows/scala.yml](https://github.com/chanjk/zendesk-search/workflows/.github/workflows/scala.yml/badge.svg?branch=main)
+
 **Note: If this is your first time running this, be aware that the initial download of sbt and dependencies can take a while. Please set aside at least 10 minutes for everything to be downloaded.**
 
 ## Requirements
