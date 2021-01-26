@@ -109,7 +109,7 @@ class ProgramSpec extends AnyFreeSpec with Matchers with TypeCheckedTripleEquals
     }
 
     "when 2 is received as input" - {
-      "should print the list of searchable fields in" in {
+      "should print the list of searchable fields" in {
         val handler = currentProgram.tick.attempt.unsafeRunSync().value
 
         handler("2").attempt.unsafeRunSync()
